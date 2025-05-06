@@ -44,11 +44,8 @@
         <!-- Image Column -->
         <div class="col-lg-6">
             <div class="position-relative">
-                <img src="{{ asset('images/homeDesign.jpg') }}" alt="Cooking inspiration"
+                <img src="{{ asset('images/chef.png') }}" alt="Cooking inspiration"
                     class="img-fluid rounded-3 shadow-lg" style="object-fit: cover; width: 100%; height: 500px;">
-                <div class="position-absolute bottom-0 start-0 w-100 p-4 bg-gradient-dark">
-                    <p class="text-white mb-0 small">Join our community of food enthusiasts</p>
-                </div>
             </div>
         </div>
     </div>
@@ -62,9 +59,8 @@
         <div class="col-md-4 col-lg-3">
             <a href="{{ route('recipes.detail', $recipe) }}" class="text-decoration-none">
                 <div class="card recipe-card h-100 text-white">
-                    <img src="{{ $recipe->image ? asset('storage/' . $recipe->image) : asset('images/homeDesign.jpg') }}" 
-                         class="card-img-top" 
-                         alt="{{ $recipe->name }}">
+                    <img src="{{ $recipe->image ? asset('storage/' . $recipe->image) : asset('images/homeDesign.jpg') }}"
+                        class="card-img-top" alt="{{ $recipe->name }}">
                     <div class="card-body">
                         <h5 class="card-title">{{ $recipe->name }}</h5>
                         <p class="card-text">{{ Str::limit($recipe->description, 100) }}</p>
