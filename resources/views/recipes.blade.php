@@ -4,7 +4,8 @@
 
 @section('content')
 <div class="container py-4">
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
+    <div
+        class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
         <div class="d-flex flex-wrap gap-2">
             <a href="{{ route('recipes.index', ['category' => 'all']) }}"
                 class="btn btn-sm btn-md-normal {{ !request('category') || request('category') == 'all' ? 'btn-primary' : 'btn-outline-primary' }}">
@@ -24,7 +25,7 @@
 
     <div class="row g-4">
         @foreach($recipes as $recipe)
-        <div class="col-md-4">
+        <div class="col-md-4 p-4">
             <a href="{{ route('recipes.detail', $recipe) }}" class="text-decoration-none">
                 <div class="card recipe-card h-100 shadow-sm text-white">
                     <img src="{{ $recipe->image ? asset('storage/' . $recipe->image) : asset('images/homeDesign.jpg') }}"
@@ -58,7 +59,7 @@
         .w-md-auto {
             width: auto !important;
         }
-        
+
         .btn-md-normal {
             padding: 0.375rem 0.75rem;
             font-size: 1rem;

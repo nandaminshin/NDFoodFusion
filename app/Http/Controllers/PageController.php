@@ -26,10 +26,6 @@ class PageController extends Controller
         return view('recipes');
     }
 
-    public function cookbook()
-    {
-        return view('cookbook');
-    }
 
     public function contact()
     {
