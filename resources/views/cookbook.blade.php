@@ -108,9 +108,12 @@
                             @endif
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="d-flex align-items-center">
-                                    <i class="fas fa-user-circle me-2"></i>
-                                    <small class="text-muted">Posted by {{ $post->user->name }} - {{
-                                        $post->created_at->diffForHumans() }}</small>
+                                    @if($post->user->profile_photo)
+                                        <img src="{{ Storage::url($post->user->profile_photo) }}" class="rounded-circle me-2" style="width: 24px; height: 24px; object-fit: cover;" alt="Profile Photo">
+                                    @else
+                                        <i class="fas fa-user-circle me-2"></i>
+                                    @endif
+                                    <small class="text-muted">Posted by {{ $post->user->first_name }} {{ $post->user->last_name }} - {{ $post->created_at->diffForHumans() }}</small>
                                 </div>
                                 <button class="btn btn-sm"
                                     style="background: linear-gradient(45deg, #10052b, #0e00d6); color: white;">

@@ -75,4 +75,56 @@ class UserController extends Controller
 
         return redirect()->route('home');
     }
+
+    public function showProfileSettings()
+    {
+        return view('profile.profileSetting');
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $userId = Auth::user()->id;
+        $user = User::findOrFail($userId);
+
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'profile_photo' => 'nullable|image|max:20000'
+        ]);
+
+        if ($request->hasFile('profile_photo')) {
+            // Delete old profile photo if exists
+            if ($user->profile_photo) {
+                Storage::delete($user->profile_photo);
+            }
+            $validated['profile_photo'] = $request->file('profile_photo')->store('profile-photos', 'public');
+        }
+
+        $user->update($validated);
+
+        return redirect()->route('profile.settings')
+            ->with('success', 'Profile updated successfully!');
+    }
+
+    public function destroyProfile(Request $request)
+    {
+        $request->validate([
+            'password' => 'required',
+        ]);
+
+        $userId = Auth::user()->id;
+        $user = User::findOrFail($userId);
+
+        if (!Hash::check($request->password, $user->password)) {
+            return back()->withErrors([
+                'password' => 'The provided password is incorrect.',
+            ]);
+        }
+
+        Auth::logout();
+        $user->delete();
+
+        return redirect()->route('home')
+            ->with('success', 'Your account has been deleted successfully.');
+    }
 }

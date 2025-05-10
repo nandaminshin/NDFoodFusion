@@ -4,23 +4,31 @@
 
 @section('content')
 <div class="container py-4">
-    <div
-        class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
-        <div class="d-flex flex-wrap gap-2">
-            <a href="{{ route('recipes.index', ['category' => 'all']) }}"
-                class="btn btn-sm btn-md-normal {{ !request('category') || request('category') == 'all' ? 'btn-primary' : 'btn-outline-primary' }}">
-                All
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            @if(Auth::check())
+            <a href="{{ route('recipes.create-new-recipe') }}" class="btn btn-lg btn-gradient position-relative overflow-hidden">
+                <span class="d-flex align-items-center">
+                    <i class="fas fa-utensils me-2"></i>
+                    Share Your Recipe
+                </span>
+                <div class="position-absolute top-0 start-0 w-100 h-100 shine"></div>
             </a>
-            @foreach($categories as $category)
-            <a href="{{ route('recipes.index', ['category' => $category->id]) }}"
-                class="btn btn-sm btn-md-normal {{ request('category') == $category->id ? 'btn-primary' : 'btn-outline-primary' }}">
-                {{ $category->name }}
-            </a>
-            @endforeach
+            @endif
         </div>
-        <a href="{{ route('recipes.create') }}" class="btn btn-primary btn-sm w-md-auto">
-            <i class="fas fa-plus me-1"></i>Create Recipe
+    </div>
+
+    <div class="d-flex flex-wrap gap-2 mb-4">
+        <a href="{{ route('recipes.index', ['category' => 'all']) }}"
+            class="btn btn-sm btn-md-normal {{ !request('category') || request('category') == 'all' ? 'btn-primary' : 'btn-outline-primary' }}">
+            All
         </a>
+        @foreach($categories as $category)
+        <a href="{{ route('recipes.index', ['category' => $category->id]) }}"
+            class="btn btn-sm btn-md-normal {{ request('category') == $category->id ? 'btn-primary' : 'btn-outline-primary' }}">
+            {{ $category->name }}
+        </a>
+        @endforeach
     </div>
 
     <div class="row g-4">
@@ -91,6 +99,37 @@
     .card:hover {
         transform: translateY(-5px);
         cursor: pointer;
+    }
+
+    .btn-gradient {
+        background: linear-gradient(45deg, #FF512F, #DD2476);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        font-size: 1.25rem;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-gradient:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        color: white;
+    }
+
+    .shine {
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        transform: skewX(-20deg);
+        top: -100%;
+        left: -100%;
+        transition: all 0.6s ease;
+        pointer-events: none;
+    }
+
+    .btn-gradient:hover .shine {
+        top: 100%;
+        left: 100%;
     }
 </style>
 @endsection

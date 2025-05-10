@@ -90,7 +90,8 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark"
                             style="background-color: #131b35c1;">
-                            <li><a class="dropdown-item"">Profile Settings</a></li>
+                            <a class="dropdown-item" style="cursor: pointer;"
+                                href="{{ route('profile.settings') }}">Profile Setting</a>
                             <li>
                                 <hr class=" dropdown-divider">
                             </li>

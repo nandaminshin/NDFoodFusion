@@ -26,14 +26,12 @@ Route::post('/contact', [ContactController::class, 'send'])->name('contact.send'
 Route::post('/register', [UserController::class, 'store'])->name('register');
 
 // Protected routes
-// Inside the protected routes group
 Route::middleware([
     'auth:sanctum',
-    config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
     // Recipe management
-    Route::get('/recipes/create', [RecipeController::class, 'create'])->name('recipes.create');
+    Route::get('/recipe/create-new-recipe', [RecipeController::class, 'createNewRecipe'])->name('recipes.create-new-recipe');
     Route::post('/recipes', [RecipeController::class, 'store'])->name('recipes.store');
     Route::get('/recipes/{recipe}/edit', [RecipeController::class, 'edit'])->name('recipes.edit');
     Route::put('/recipes/{recipe}', [RecipeController::class, 'update'])->name('recipes.update');
@@ -42,12 +40,16 @@ Route::middleware([
     // Cookbook routes
     Route::get('/cookbook', [CookbookController::class, 'index'])->name('cookbook');
     Route::get('/cookbook/posts/create', [CookbookController::class, 'create'])->name('cookbook.posts.create');
-    Route::post('/cookbook/posts', [CookbookController::class, 'store'])->name('cookbook.posts.store'); // Add this line
+    Route::post('/cookbook/posts', [CookbookController::class, 'store'])->name('cookbook.posts.store');
     Route::get('/cookbook/posts/{post}', [CookbookController::class, 'show'])->name('cookbook.posts.show');
     Route::get('/cookbook/my-posts', [CookbookController::class, 'userPosts'])->name('cookbook.my-posts');
-    // Inside the protected routes group, after cookbook routes
     Route::post('/cookbook/posts/{post}/comments', [CookbookController::class, 'storeComment'])
         ->name('cookbook.posts.comments.store');
     Route::post('/cookbook/posts/{post}/comments/{comment}/replies', [CookbookController::class, 'storeReply'])
         ->name('cookbook.posts.comments.reply');
+
+    // Profile routes
+    Route::get('/profile/settings', [UserController::class, 'showProfileSettings'])->name('profile.settings');
+    Route::put('/profile/update', [UserController::class, 'updateProfile'])->name('profile.update');
+    Route::delete('/profile/destroy', [UserController::class, 'destroyProfile'])->name('profile.destroy');
 });
