@@ -4,15 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\RateLimiter;
 
 class UserController extends Controller
 {
     public function store(Request $request)
     {
-        // Check if user already exists with this email
         $existingUser = User::where('email', $request->email)->first();
         if ($existingUser) {
             return back()
@@ -20,7 +20,6 @@ class UserController extends Controller
                 ->withErrors(['email' => 'An account with this email already exists. Please sign in instead.']);
         }
 
-        // Check if passwords match
         if ($request->password !== $request->password_confirmation) {
             return back()
                 ->withInput()
@@ -39,14 +38,12 @@ class UserController extends Controller
 
         $user = User::create($validated);
 
-        // Log the user in after registration
         Auth::login($user);
 
         return redirect()->route('home')
             ->with('status', 'Welcome to FoodFusion!');
     }
 
-    // Add this method to existing UserController
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -54,11 +51,24 @@ class UserController extends Controller
             'password' => 'required',
         ]);
 
+
+        if (RateLimiter::tooManyAttempts($request->email, 8)) {
+            $seconds = RateLimiter::availableIn($request->email);
+            return back()
+                ->withInput($request->only('email'))
+                ->withErrors([
+                    'email' => 'Too many login attempts. Please try again in ' . ceil($seconds / 60) . ' minutes.',
+                ]);
+        }
+
         if (Auth::attempt($credentials, $request->filled('remember'))) {
+            RateLimiter::clear($request->email);
             $request->session()->regenerate();
             return redirect()->route('home')
                 ->with('status', 'Welcome back!');
         }
+
+        RateLimiter::hit($request->email, 180); // 180 seconds (3 minutes) decay time
 
         return back()
             ->withInput($request->only('email'))

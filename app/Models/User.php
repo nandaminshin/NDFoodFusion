@@ -30,7 +30,7 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    // Get full name accessor
+
     public function getFullNameAttribute()
     {
         return "{$this->first_name} {$this->last_name}";

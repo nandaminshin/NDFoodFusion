@@ -8,6 +8,7 @@ use App\Models\Comment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class CookbookController extends Controller
 {
@@ -116,5 +117,40 @@ class CookbookController extends Controller
         $comment->delete();
 
         return back()->with('success', 'Comment deleted successfully!');
+    }
+
+    public function edit(Post $post)
+    {
+        if (!Auth::user() || Auth::id() !== $post->user_id) {
+            abort(403, 'Unauthorized action.');
+        }
+        return view('cookbook.posts.edit', compact('post'));
+    }
+
+    public function update(Request $request, Post $post)
+    {
+        if (!Auth::user() || Auth::id() !== $post->user_id) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $validated = $request->validate([
+            'title' => 'required|max:255',
+            'description' => 'required',
+            'image' => 'nullable|image|max:30000'
+        ]);
+
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($post->image) {
+                Storage::disk('public')->delete($post->image);
+            }
+            $path = $request->file('image')->store('posts', 'public');
+            $post->image = $path;
+        }
+
+        $post->update($validated);
+
+        return redirect()->route('cookbook.my-posts')
+            ->with('success', 'Post updated successfully!');
     }
 }

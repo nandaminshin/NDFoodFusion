@@ -33,13 +33,11 @@ class Comment extends Model
         return $this->hasMany(Comment::class, 'parent_id');
     }
 
-    // Recursive relationship to get all nested replies
     public function allReplies()
     {
         return $this->replies()->with('allReplies');
     }
 
-    // Helper method to check if the comment is from the post author
     public function isFromAuthor()
     {
         return $this->user_id === $this->post->user_id;

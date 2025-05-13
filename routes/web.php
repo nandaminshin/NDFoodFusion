@@ -43,6 +43,9 @@ Route::middleware([
     Route::post('/cookbook/posts', [CookbookController::class, 'store'])->name('cookbook.posts.store');
     Route::get('/cookbook/posts/{post}', [CookbookController::class, 'show'])->name('cookbook.posts.show');
     Route::get('/cookbook/my-posts', [CookbookController::class, 'userPosts'])->name('cookbook.my-posts');
+    Route::get('/cookbook/posts/{post}/edit', [CookbookController::class, 'edit'])->name('cookbook.posts.edit');
+    Route::put('/cookbook/posts/{post}', [CookbookController::class, 'update'])->name('cookbook.posts.update');
+    Route::delete('/cookbook/posts/{post}', [CookbookController::class, 'destroy'])->name('cookbook.posts.destroy');
     Route::post('/cookbook/posts/{post}/comments', [CookbookController::class, 'storeComment'])
         ->name('cookbook.posts.comments.store');
     Route::post('/cookbook/posts/{post}/comments/{comment}/replies', [CookbookController::class, 'storeReply'])
